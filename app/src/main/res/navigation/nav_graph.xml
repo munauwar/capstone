@@ -14,6 +14,12 @@
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
+        <action
+            android:id="@+id/action_FirstFragment_to_reviewsFragment3"
+            app:destination="@id/reviewsFragment2" />
+        <action
+            android:id="@+id/action_FirstFragment_to_reviewsFragment2"
+            app:destination="@id/reviewsFragment2" />
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
@@ -25,4 +31,9 @@
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/reviewsFragment2"
+        android:name="com.example.capstone.ReviewsFragment"
+        android:label="fragment_reviews"
+        tools:layout="@layout/fragment_reviews" />
 </navigation>

@@ -5,15 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.example.capstone.adapter.MoviesAdapter
+import com.example.capstone.adapter.ReviewAdapter
 import com.example.capstone.model.Movie
 import com.example.capstone.viewmodel.MovieViewModel
 import kotlinx.android.synthetic.main.fragment_movies.*
@@ -45,7 +44,6 @@ class MoviesFragment : Fragment() {
         observeMovie()
     }
 
-
     private fun initView() {
         rvMovies.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         rvMovies.adapter = moviesAdapter
@@ -73,6 +71,7 @@ class MoviesFragment : Fragment() {
 
     private fun getDetail(movie: Movie) {
         setFragmentResult(REQ_MOVIE_KEY, bundleOf(Pair(BUNDLE_MOVIE_KEY, movie)))
+        viewModel.setSelectedMovie(movie)
         findNavController().navigate(
                 R.id.action_FirstFragment_to_SecondFragment
         )
