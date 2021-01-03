@@ -27,5 +27,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:background="@color/colorPrimary"
         app:itemTextColor="@color/white"
+        app:itemIconTint="@color/white"
         app:menu="@menu/menu_main" />
 </androidx.constraintlayout.widget.ConstraintLayout>

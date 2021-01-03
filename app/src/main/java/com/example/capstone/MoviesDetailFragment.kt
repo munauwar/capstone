@@ -1,8 +1,11 @@
 package com.example.capstone
 
 import android.app.AlertDialog
+import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,13 +14,20 @@ import android.widget.EditText
 import android.widget.RatingBar
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.capstone.adapter.TabAdapter
+import com.example.capstone.adapter.ReviewAdapter
 import com.example.capstone.model.Movie
+import com.example.capstone.model.Review
 import com.example.capstone.viewmodel.MovieViewModel
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_movies_detail.*
 import kotlinx.android.synthetic.main.fragment_movies_detail.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -25,13 +35,13 @@ import kotlinx.android.synthetic.main.fragment_movies_detail.view.*
 const val REQ_MOVIE_KEY = "req_movie"
 const val BUNDLE_MOVIE_KEY = "bundle_movie"
 class MoviesDetailFragment : Fragment() {
+    private val reviews = arrayListOf<Review>()
+    private val reviewsAdapter = ReviewAdapter(reviews)
     private val viewModel: MovieViewModel by viewModels()
-    companion object {
-        var title : String? = null
-    }
+
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_movies_detail, container, false)
@@ -41,17 +51,32 @@ class MoviesDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         observeClickMovie()
-        initTabs()
+        observeReview()
+        initView()
+    }
+
+    private fun initView() {
+        rvReviews.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        rvReviews.adapter = reviewsAdapter
+    }
+
+    private fun observeReview() {
+        viewModel.reviews.observe(viewLifecycleOwner, Observer {
+            reviews.clear()
+            reviews.addAll(it)
+            Log.e(TAG, it.toString())
+            reviewsAdapter.notifyDataSetChanged()
+        })
     }
 
     private fun observeClickMovie() {
-        setFragmentResultListener(REQ_MOVIE_KEY) { _ , bundle ->
+        setFragmentResultListener(REQ_MOVIE_KEY) { _, bundle ->
             bundle.getParcelable<Movie>(BUNDLE_MOVIE_KEY)?.let { movie ->
                 button.setOnClickListener {
                     showRateDialog(movie.title)
                 }
-                title = movie.title
                 setDetailElements(movie)
+                viewModel.getReview(movie.title)
             }
         }
     }
@@ -80,25 +105,5 @@ class MoviesDetailFragment : Fragment() {
             viewModel.createReview(title, commentSave, ratingSave)
         }
         builder.show()
-    }
-
-    private fun initTabs() {
-        vp_content.adapter = TabAdapter(activity?.supportFragmentManager, tab_layout.tabCount)
-        tab_layout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                if (tab != null) {
-                    vp_content.currentItem = tab.position
-                }
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                // Handle tab reselect
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                // Handle tab unselect
-            }
-        })
     }
 }

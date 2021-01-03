@@ -17,5 +17,6 @@
     <string name="home">Home</string>
     <string name="reviews">Reviews</string>
     <string name="detail">Movie details</string>
+    <string name="search">Search </string>
 
 </resources>

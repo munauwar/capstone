@@ -17,8 +17,9 @@ class MoviesRepository {
     private var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val moviesApiService: MoviesApiService = MoviesApi.createApi()
     private val _movies: MutableLiveData<List<Movie>> = MutableLiveData()
-    private val _reviews: MutableLiveData<ArrayList<Review>> = MutableLiveData()
     private val _topRatedMovies: MutableLiveData<List<Movie>> = MutableLiveData()
+    private val _reviews: MutableLiveData<ArrayList<Review>> = MutableLiveData()
+    private val _searchMovies: MutableLiveData<List<Movie>> = MutableLiveData()
 
 
     val movies: LiveData<List<Movie>>
@@ -30,13 +31,15 @@ class MoviesRepository {
     val reviews: LiveData<ArrayList<Review>>
         get() = _reviews
 
+    val searchMovies: LiveData<List<Movie>>
+        get() = _searchMovies
 
     suspend fun getPopularMovies() {
         try {
             val result = withTimeout(5000) {
                 moviesApiService.getPopularMovies()
             }
-            _movies.value = result.results
+            _movies.postValue(result.results)
         } catch (error: Throwable) {
             throw PopularMoviesFetchError("Unable to fetch popular movies", error)
         }
@@ -47,7 +50,7 @@ class MoviesRepository {
             val resultTopRated = withTimeout(5000) {
                 moviesApiService.getTopRatedMovies()
             }
-            _topRatedMovies.value = resultTopRated.results
+            _topRatedMovies.postValue(resultTopRated.results)
         } catch (error: Throwable) {
             throw TopRatedMoviesFetchError("Unable to fetch top rated movies", error)
         }
@@ -83,7 +86,6 @@ class MoviesRepository {
                             currentItem.getString("comment").toString(),
                             currentItem.getDouble("rating")!!.toFloat()))
                 }
-                _reviews.value?.clear()
                 _reviews.value = reviewsList
             }
         }  catch (e : Exception) {
@@ -91,8 +93,20 @@ class MoviesRepository {
         }
     }
 
+    suspend fun getSearchMovies(movie: String) {
+        try {
+            val resultSearchMovies = withTimeout(5000) {
+                moviesApiService.getSearchMovies(movie)
+            }
+            _searchMovies.postValue(resultSearchMovies.results)
+        } catch (error: Throwable) {
+            throw SearchMoviesError("Unable to search movies", error)
+        }
+    }
+
     class PopularMoviesFetchError(message: String, cause: Throwable): Throwable(message, cause)
     class TopRatedMoviesFetchError(message: String, cause: Throwable): Throwable(message, cause)
     class CreateReviewError(message: String, cause: Throwable) : Exception(message, cause)
     class GetReviewError(message: String, cause: Throwable): Exception(message, cause)
+    class SearchMoviesError(message: String, cause: Throwable): Exception(message, cause)
 }

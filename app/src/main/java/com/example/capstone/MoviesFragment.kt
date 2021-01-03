@@ -16,6 +16,9 @@ import com.example.capstone.adapter.ReviewAdapter
 import com.example.capstone.model.Movie
 import com.example.capstone.viewmodel.MovieViewModel
 import kotlinx.android.synthetic.main.fragment_movies.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -71,7 +74,6 @@ class MoviesFragment : Fragment() {
 
     private fun getDetail(movie: Movie) {
         setFragmentResult(REQ_MOVIE_KEY, bundleOf(Pair(BUNDLE_MOVIE_KEY, movie)))
-        viewModel.setSelectedMovie(movie)
         findNavController().navigate(
                 R.id.action_FirstFragment_to_SecondFragment
         )

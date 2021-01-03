@@ -15,11 +15,8 @@
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
         <action
-            android:id="@+id/action_FirstFragment_to_reviewsFragment3"
-            app:destination="@id/reviewsFragment2" />
-        <action
-            android:id="@+id/action_FirstFragment_to_reviewsFragment2"
-            app:destination="@id/reviewsFragment2" />
+            android:id="@+id/action_FirstFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
@@ -30,10 +27,20 @@
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
+        <action
+            android:id="@+id/action_SecondFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
-        android:id="@+id/reviewsFragment2"
-        android:name="com.example.capstone.ReviewsFragment"
-        android:label="fragment_reviews"
-        tools:layout="@layout/fragment_reviews" />
+        android:id="@+id/searchFragment"
+        android:name="com.example.capstone.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_SecondFragment"
+            app:destination="@id/SecondFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_SecondFragment2"
+            app:destination="@id/SecondFragment" />
+    </fragment>
 </navigation>

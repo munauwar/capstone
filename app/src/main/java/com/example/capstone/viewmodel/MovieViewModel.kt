@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.capstone.model.Movie
 import com.example.capstone.model.Review
 import com.example.capstone.repository.MoviesRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MovieViewModel(application: Application): AndroidViewModel(application) {
@@ -18,18 +19,15 @@ class MovieViewModel(application: Application): AndroidViewModel(application) {
     val movies = moviesRepository.movies
     val reviews = moviesRepository.reviews
     val topRatedMovies = moviesRepository.topRatedMovies
+    val searchMovies = moviesRepository.searchMovies
     private val _errorText: MutableLiveData<String> = MutableLiveData()
-    private val _selectedMovie: MutableLiveData<Movie> = MutableLiveData()
     private val TAG = "FIRESTORE"
 
     val errorText: LiveData<String>
         get() = _errorText
 
-    val selectedMovie: LiveData<Movie>
-        get() = _selectedMovie
-
     fun getPopularMovies() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO)  {
             try {
                 moviesRepository.getPopularMovies()
             } catch (error: MoviesRepository.PopularMoviesFetchError) {
@@ -40,7 +38,7 @@ class MovieViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun getTopRatedMovies() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 moviesRepository.getTopRatedMovies()
             } catch (error: MoviesRepository.TopRatedMoviesFetchError) {
@@ -52,7 +50,7 @@ class MovieViewModel(application: Application): AndroidViewModel(application) {
 
     fun createReview(title: String, comment: String, ratingBar: Float) {
         val review = Review(comment, ratingBar)
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             try {
                 moviesRepository.createReview(title, review)
             } catch (ex: MoviesRepository.CreateReviewError) {
@@ -64,19 +62,26 @@ class MovieViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun getReview(title: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 moviesRepository.getReview(title)
             } catch (ex: MoviesRepository.GetReviewError) {
                 val errorMsg = "Something went wrong while retrieving review"
                 Log.e(TAG, ex.message ?: errorMsg)
-                _errorText.value = errorMsg
+                _errorText.postValue(errorMsg)
             }
         }
     }
 
-    fun setSelectedMovie(movie: Movie) {
-        _selectedMovie.value = movie
+    fun getSearchMovies(movie: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                moviesRepository.getSearchMovies(movie)
+            } catch (ex: MoviesRepository.SearchMoviesError) {
+                val errorMsg = "Something went wrong while searching movies"
+                Log.e(TAG, ex.message ?: errorMsg)
+                _errorText.postValue(errorMsg)
+            }
+        }
     }
-
 }
