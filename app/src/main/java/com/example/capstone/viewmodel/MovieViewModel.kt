@@ -31,7 +31,7 @@ class MovieViewModel(application: Application): AndroidViewModel(application) {
             try {
                 moviesRepository.getPopularMovies()
             } catch (error: MoviesRepository.PopularMoviesFetchError) {
-                _errorText.value = error.message
+                _errorText.postValue(error.message)
                 Log.e("Fetch error", error.cause.toString())
             }
         }
@@ -42,7 +42,7 @@ class MovieViewModel(application: Application): AndroidViewModel(application) {
             try {
                 moviesRepository.getTopRatedMovies()
             } catch (error: MoviesRepository.TopRatedMoviesFetchError) {
-                _errorText.value = error.message
+                _errorText.postValue(error.message)
                 Log.e("Fetch error", error.cause.toString())
             }
         }

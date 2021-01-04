@@ -1,4 +1,4 @@
-package com.example.capstone
+package com.example.capstone.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,14 +11,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.capstone.R
 import com.example.capstone.adapter.MoviesAdapter
-import com.example.capstone.adapter.ReviewAdapter
 import com.example.capstone.model.Movie
 import com.example.capstone.viewmodel.MovieViewModel
 import kotlinx.android.synthetic.main.fragment_movies.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.

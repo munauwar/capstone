@@ -1,4 +1,4 @@
-package com.example.capstone
+package com.example.capstone.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.example.capstone.R
 import com.example.capstone.adapter.MoviesAdapter
 import com.example.capstone.model.Movie
 import com.example.capstone.viewmodel.MovieViewModel
@@ -60,7 +61,7 @@ class SearchFragment : Fragment() {
     private fun getDetail(movie: Movie) {
         setFragmentResult(REQ_MOVIE_KEY, bundleOf(Pair(BUNDLE_MOVIE_KEY, movie)))
         findNavController().navigate(
-            R.id.action_searchFragment_to_SecondFragment
+                R.id.action_searchFragment_to_SecondFragment
         )
     }
 }

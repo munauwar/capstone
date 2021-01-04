@@ -1,9 +1,9 @@
-package com.example.capstone
+package com.example.capstone.ui
 
 import android.app.AlertDialog
-import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.DialogInterface
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,21 +12,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.RatingBar
+import android.widget.Toast
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.capstone.R
 import com.example.capstone.adapter.ReviewAdapter
 import com.example.capstone.model.Movie
 import com.example.capstone.model.Review
 import com.example.capstone.viewmodel.MovieViewModel
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_movies_detail.*
 import kotlinx.android.synthetic.main.fragment_movies_detail.view.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 /**
@@ -103,7 +102,13 @@ class MoviesDetailFragment : Fragment() {
             val commentSave = comment.text.toString()
             val ratingSave = rating.rating
             viewModel.createReview(title, commentSave, ratingSave)
+            Snackbar.make(requireActivity().findViewById(android.R.id.content),
+                    "Review saved!",
+                    Snackbar.LENGTH_LONG)
+                    .setActionTextColor(Color.WHITE)
+                    .show()
         }
         builder.show()
+
     }
 }
