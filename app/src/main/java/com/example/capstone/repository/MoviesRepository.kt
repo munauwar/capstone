@@ -1,6 +1,5 @@
 package com.example.capstone.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.capstone.api.MoviesApi
@@ -11,14 +10,13 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withTimeout
-import javax.security.auth.callback.Callback
 
 class MoviesRepository {
     private var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val moviesApiService: MoviesApiService = MoviesApi.createApi()
     private val _movies: MutableLiveData<List<Movie>> = MutableLiveData()
     private val _topRatedMovies: MutableLiveData<List<Movie>> = MutableLiveData()
-    private val _reviews: MutableLiveData<ArrayList<Review>> = MutableLiveData()
+    private val _reviews: MutableLiveData<List<Review>> = MutableLiveData()
     private val _searchMovies: MutableLiveData<List<Movie>> = MutableLiveData()
 
 
@@ -28,7 +26,7 @@ class MoviesRepository {
     val topRatedMovies: LiveData<List<Movie>>
         get() = _topRatedMovies
 
-    val reviews: LiveData<ArrayList<Review>>
+    val reviews: LiveData<List<Review>>
         get() = _reviews
 
     val searchMovies: LiveData<List<Movie>>
@@ -74,7 +72,7 @@ class MoviesRepository {
     suspend fun getReview(title: String) {
         try {
             withTimeout(5000) {
-                val reviewsList : ArrayList<Review> = ArrayList()
+                val reviewsList : MutableList<Review> = mutableListOf()
                 val data = firestore
                         .collection("Reviews")
                         .document(title)
@@ -86,7 +84,7 @@ class MoviesRepository {
                             currentItem.getString("comment").toString(),
                             currentItem.getDouble("rating")!!.toFloat()))
                 }
-                _reviews.value = reviewsList
+                _reviews.postValue(reviewsList)
             }
         }  catch (e : Exception) {
             throw GetReviewError(e.message.toString(), e)

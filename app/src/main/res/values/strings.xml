@@ -18,5 +18,7 @@
     <string name="reviews">Reviews</string>
     <string name="detail">Movie details</string>
     <string name="search">Search </string>
+    <string name="review_saved">Review saved!</string>
+    <string name="empty">Input veld mag niet leeg zijn!</string>
 
 </resources>

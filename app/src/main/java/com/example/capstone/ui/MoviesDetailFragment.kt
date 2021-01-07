@@ -25,8 +25,6 @@ import com.example.capstone.model.Review
 import com.example.capstone.viewmodel.MovieViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_movies_detail.*
-import kotlinx.android.synthetic.main.fragment_movies_detail.view.*
-import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -54,20 +52,6 @@ class MoviesDetailFragment : Fragment() {
         initView()
     }
 
-    private fun initView() {
-        rvReviews.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        rvReviews.adapter = reviewsAdapter
-    }
-
-    private fun observeReview() {
-        viewModel.reviews.observe(viewLifecycleOwner, Observer {
-            reviews.clear()
-            reviews.addAll(it)
-            Log.e(TAG, it.toString())
-            reviewsAdapter.notifyDataSetChanged()
-        })
-    }
-
     private fun observeClickMovie() {
         setFragmentResultListener(REQ_MOVIE_KEY) { _, bundle ->
             bundle.getParcelable<Movie>(BUNDLE_MOVIE_KEY)?.let { movie ->
@@ -90,6 +74,20 @@ class MoviesDetailFragment : Fragment() {
         }
     }
 
+    private fun initView() {
+        rvReviews.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        rvReviews.adapter = reviewsAdapter
+        rvReviews.visibility = View.VISIBLE
+    }
+
+    private fun observeReview() {
+        viewModel.reviews.observe(viewLifecycleOwner, Observer {
+            reviews.clear()
+            reviews.addAll(it)
+            reviewsAdapter.notifyDataSetChanged()
+        })
+    }
+
     private fun showRateDialog(title: String) {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle(getString(R.string.reviews))
@@ -103,12 +101,11 @@ class MoviesDetailFragment : Fragment() {
             val ratingSave = rating.rating
             viewModel.createReview(title, commentSave, ratingSave)
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
-                    "Review saved!",
+                    R.string.review_saved,
                     Snackbar.LENGTH_LONG)
                     .setActionTextColor(Color.WHITE)
                     .show()
         }
         builder.show()
-
     }
 }

@@ -2,13 +2,11 @@ package com.example.capstone.viewmodel
 
 import android.app.Application
 import android.util.Log
-import android.widget.EditText
-import android.widget.RatingBar
+
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.capstone.model.Movie
 import com.example.capstone.model.Review
 import com.example.capstone.repository.MoviesRepository
 import kotlinx.coroutines.Dispatchers
